@@ -39,7 +39,7 @@
     main {
       flex: 1;
       display: grid;
-      grid-template-columns: minmax(340px, 460px) 1fr;
+      grid-template-columns: minmax(340px, 470px) 1fr;
       min-height: calc(100vh - 56px);
     }
     @media (max-width: 960px) {
@@ -51,7 +51,7 @@
       padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
       overflow-y: auto;
     }
     .right-pane {
@@ -67,27 +67,22 @@
       font-weight: 600;
       color: #e4e4e7;
     }
-    textarea {
+    textarea, input.text-field {
       width: 100%;
-      min-height: 130px;
       background: #09090b;
       border: 1px solid #27272a;
       border-radius: 8px;
       color: #e4e4e7;
-      padding: 12px;
+      padding: 10px 12px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 12px;
       line-height: 1.5;
-      resize: vertical;
       outline: none;
     }
-    textarea:focus { border-color: #ef4444; }
-    .btn-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    button {
+    textarea { min-height: 110px; resize: vertical; }
+    textarea:focus, input.text-field:focus { border-color: #ef4444; }
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    button, a.btn-link {
       border: none;
       border-radius: 8px;
       padding: 9px 14px;
@@ -95,6 +90,10 @@
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       transition: background 0.15s, opacity 0.15s;
     }
     button:disabled { opacity: 0.55; cursor: not-allowed; }
@@ -109,7 +108,35 @@
       border-radius: 8px;
       padding: 10px 12px;
       font-size: 12px;
+      line-height: 1.45;
       display: none;
+    }
+    .cors-box {
+      border: 1px solid #854d0e;
+      background: rgba(113, 63, 18, 0.2);
+      border-radius: 8px;
+      padding: 12px;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .cors-box h3 {
+      margin: 0;
+      font-size: 13px;
+      color: #fde047;
+    }
+    .cors-box p {
+      margin: 0;
+      color: #d4d4d8;
+      line-height: 1.45;
+    }
+    .proxy-box {
+      border: 1px solid #27272a;
+      background: #111114;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
     }
     .meta-strip {
       font-size: 12px;
@@ -117,15 +144,11 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      padding-bottom: 12px;
+      padding-bottom: 10px;
       border-bottom: 1px solid #27272a;
     }
     .meta-strip strong { color: #f4f4f5; }
-    .stages {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+    .stages { display: flex; flex-direction: column; gap: 8px; }
     .stage-card {
       border: 1px solid #27272a;
       background: #111114;
@@ -150,11 +173,7 @@
       word-break: break-word;
     }
     details { margin-top: 6px; }
-    summary {
-      font-size: 11px;
-      color: #71717a;
-      cursor: pointer;
-    }
+    summary { font-size: 11px; color: #a1a1aa; cursor: pointer; }
     pre.stage-pre {
       margin: 6px 0 0;
       padding: 8px;
@@ -165,7 +184,7 @@
       font-size: 11px;
       color: #d4d4d8;
       overflow-x: auto;
-      max-height: 140px;
+      max-height: 150px;
       white-space: pre-wrap;
       word-break: break-all;
     }
@@ -176,10 +195,7 @@
       gap: 12px;
       flex-wrap: wrap;
     }
-    .out-title {
-      font-size: 14px;
-      font-weight: 600;
-    }
+    .out-title { font-size: 14px; font-weight: 600; }
     .out-sub {
       font-size: 12px;
       color: #a1a1aa;
@@ -203,16 +219,13 @@
       color: #e4e4e7;
       white-space: pre;
     }
-    .placeholder {
-      color: #71717a;
-      font-size: 13px;
-    }
+    .placeholder { color: #71717a; font-size: 13px; }
   </style>
 </head>
 <body>
   <header>
     <div class="brand">Lua Script Deobfuscator</div>
-    <div class="header-meta">Multi-Layer Loader &amp; Cipher Decoder</div>
+    <div class="header-meta">Client-Side + Multi-Layer Cipher Decoder</div>
   </header>
 
   <main>
@@ -227,7 +240,46 @@
         </div>
       </div>
 
+      <details class="proxy-box">
+        <summary>ตั้งค่า CORS Proxy สำหรับ GitHub Pages (ไม่บังคับ)</summary>
+        <div style="margin-top:8px;display:flex;flex-direction:column;gap:8px;">
+          <div style="color:#a1a1aa;line-height:1.45;">
+            เว็บต้นทางบางตัว (เช่น <code style="color:#e4e4e7;">workers.dev</code>) ไม่เปิด CORS ให้หน้าเว็บสถิต (GitHub Pages) อ่านตรงๆ ถ้าต้องการให้กดทีเดียวจบอัตโนมัติ 100% ให้สร้าง Cloudflare Worker ฟรี 10 บรรทัดแล้ววาง URL ที่นี่:
+          </div>
+          <div class="btn-row">
+            <input class="text-field" id="proxy-url-input" placeholder="https://your-cors-relay.workers.dev/?url=" style="flex:1;" />
+            <button class="btn-secondary" id="btn-save-proxy" type="button">บันทึก</button>
+          </div>
+          <details>
+            <summary>ดูโค้ด Cloudflare Worker 10 บรรทัด (ฟรี)</summary>
+            <pre class="stage-pre">export default {
+  async fetch(req) {
+    const u = new URL(req.url).searchParams.get("url");
+    if (!u) return new Response("Missing ?url=", { status: 400 });
+    const r = await fetch(u, { headers: { "User-Agent": "Roblox/WinInet" } });
+    return new Response(await r.text(), {
+      status: r.status,
+      headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "text/plain;charset=utf-8" }
+    });
+  }
+};</pre>
+          </details>
+        </div>
+      </details>
+
       <div class="error-box" id="error-box"></div>
+
+      <div class="cors-box" id="cors-box">
+        <h3 id="cors-title">ขั้นตอนดึง Payload (ติด CORS ของเบราว์เซอร์)</h3>
+        <p id="cors-desc">เบราว์เซอร์บล็อกการดึงลิงก์ Cloudflare Worker ข้ามโดเมนโดยตรง ให้เปิดลิงก์ด้านล่างในแท็บใหม่แล้วก๊อปข้อความทั้งหมดมาวาง:</p>
+        <div class="btn-row">
+          <a class="btn-link btn-secondary" id="cors-open-link" href="#" target="_blank" rel="noopener noreferrer">1. เปิดลิงก์ Worker</a>
+          <button class="btn-secondary" id="cors-copy-url" type="button">คัดลอกลิงก์</button>
+        </div>
+        <textarea id="cors-paste" style="min-height:80px;" placeholder="2. วางข้อความที่ได้จากหน้าเว็บนั้นลงที่นี่ แล้วกดปุ่มด้านล่าง..."></textarea>
+        <button class="btn-primary" id="cors-continue" type="button">ถอดรหัสขั้นต่อไป</button>
+      </div>
+
       <div class="meta-strip" id="meta-strip" style="display:none;"></div>
       <div class="stages" id="stages-list"></div>
     </section>
@@ -253,13 +305,23 @@
   <script>
     (function () {
       const API_ORIGIN = "https://ais-dev-sx5zqeegbwmtitmcziohqy-396192244470.asia-southeast1.run.app";
+      const PROXY_STORAGE_KEY = "lua_deobf_custom_proxy_v1";
       const SAMPLE = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostPlayer352/Test4/refs/heads/main/Auth"))()Ioad("934be1c208a3b7d829ae863ad1983dff")';
 
       const inputEl = document.getElementById("script-input");
       const runBtn = document.getElementById("btn-run");
       const sampleBtn = document.getElementById("btn-sample");
       const clearBtn = document.getElementById("btn-clear");
+      const proxyInput = document.getElementById("proxy-url-input");
+      const saveProxyBtn = document.getElementById("btn-save-proxy");
       const errorBox = document.getElementById("error-box");
+      const corsBox = document.getElementById("cors-box");
+      const corsTitle = document.getElementById("cors-title");
+      const corsDesc = document.getElementById("cors-desc");
+      const corsOpenLink = document.getElementById("cors-open-link");
+      const corsCopyUrl = document.getElementById("cors-copy-url");
+      const corsPaste = document.getElementById("cors-paste");
+      const corsContinue = document.getElementById("cors-continue");
       const metaStrip = document.getElementById("meta-strip");
       const stagesList = document.getElementById("stages-list");
       const codeOutput = document.getElementById("code-output");
@@ -268,6 +330,19 @@
       const downloadBtn = document.getElementById("btn-download-lua");
 
       let currentFinalCode = "";
+      let pendingManualStep = null;
+
+      try {
+        proxyInput.value = localStorage.getItem(PROXY_STORAGE_KEY) || "";
+      } catch (e) {}
+
+      saveProxyBtn.addEventListener("click", () => {
+        try {
+          localStorage.setItem(PROXY_STORAGE_KEY, proxyInput.value.trim());
+          saveProxyBtn.textContent = "บันทึกแล้ว!";
+          setTimeout(() => { saveProxyBtn.textContent = "บันทึก"; }, 1400);
+        } catch (e) {}
+      });
 
       function copyText(text) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -290,10 +365,108 @@
         } catch (e) { return false; }
       }
 
-      function decodeDecimalLocal(str) {
-        return str.replace(/\\(\d{1,3})/g, function (_, n) {
-          return String.fromCharCode(Number(n));
-        });
+      function escapeHtml(s) {
+        return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      }
+
+      function decodeLuaObfuscatorRle(lolStr) {
+        const hex = lolStr.startsWith("LOL!") ? lolStr.slice(4) : lolStr;
+        const out = [];
+        let rep = null;
+        for (let i = 0; i + 1 < hex.length; i += 2) {
+          const pair = hex.slice(i, i + 2);
+          if (pair[1] === "Q") {
+            rep = parseInt(pair[0], 10);
+          } else {
+            const b = parseInt(pair, 16);
+            if (Number.isNaN(b)) continue;
+            if (rep !== null) {
+              for (let r = 0; r < rep; r++) out.push(b);
+              rep = null;
+            } else {
+              out.push(b);
+            }
+          }
+        }
+        return new Uint8Array(out);
+      }
+
+      function extractStringsFromLolChunk(bytes) {
+        let pos = 0;
+        const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+        const u8 = () => bytes[pos++];
+        const u32 = () => { const v = view.getUint32(pos, true); pos += 4; return v; };
+        const dec = new TextDecoder("utf-8", { fatal: false });
+        const strs = [];
+        try {
+          const cnt = u32();
+          if (cnt > 0 && cnt < 50000) {
+            for (let i = 0; i < cnt; i++) {
+              const t = u8();
+              if (t === 1) u8();
+              else if (t === 2) pos += 8;
+              else if (t === 3) {
+                const len = u32();
+                strs.push(len ? dec.decode(bytes.slice(pos, pos + len)) : "");
+                pos += len;
+              } else break;
+            }
+            if (strs.length) return strs;
+          }
+        } catch (e) {}
+        let latin = "";
+        for (let i = 0; i < bytes.length; i++) latin += String.fromCharCode(bytes[i]);
+        return latin.match(/[\x20-\x7e]{4,}/g) || [];
+      }
+
+      function decodeDecimalEscapes(str) {
+        return str.replace(/\\(\d{1,3})/g, (_, n) => String.fromCharCode(Number(n)));
+      }
+
+      function decodeByteShift(encodedStr, key) {
+        const parts = encodedStr.split("/");
+        const out = [];
+        for (let i = 0; i < parts.length; i++) {
+          const b = Number(parts[i]);
+          if (Number.isNaN(b)) continue;
+          const k = key.charCodeAt(i % key.length);
+          out.push(String.fromCharCode((b - k + 256) % 256));
+        }
+        return out.join("");
+      }
+
+      function randomKey64() {
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let s = "";
+        for (let i = 0; i < 64; i++) s += chars[Math.floor(Math.random() * chars.length)];
+        return s;
+      }
+
+      async function timedFetch(url, ms) {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), ms || 6000);
+        try {
+          const res = await fetch(url, { signal: ctrl.signal });
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return await res.text();
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+
+      async function fetchFast(url) {
+        const customProxy = (proxyInput.value || "").trim();
+        if (customProxy) {
+          const target = customProxy.includes("=") || customProxy.endsWith("/")
+            ? customProxy + encodeURIComponent(url)
+            : customProxy + "?url=" + encodeURIComponent(url);
+          try {
+            return await timedFetch(target, 7000);
+          } catch (e) {}
+        }
+
+        // Direct fetch (fast 6s timeout — succeeds immediately for GitHub, pages.dev, Firebase; fails in ~50ms on CORS-blocked workers)
+        return await timedFetch(url, 6000);
       }
 
       function renderResult(data) {
@@ -315,7 +488,7 @@
           metaStrip.style.display = "flex";
         }
 
-        (data.stages || []).forEach(function (st) {
+        (data.stages || []).forEach((st) => {
           const card = document.createElement("div");
           card.className = "stage-card";
           const isErr = st.status === "error";
@@ -336,26 +509,169 @@
           copyBtn.disabled = false;
           downloadBtn.disabled = false;
         } else {
-          codeOutput.innerHTML = '<span class="placeholder">ไม่พบซอสโค้ดปลายทาง</span>';
+          codeOutput.innerHTML = '<span class="placeholder">ยังไม่มีซอสโค้ดปลายทาง</span>';
           outputStats.textContent = "ยังไม่มีผลลัพธ์";
           copyBtn.disabled = true;
           downloadBtn.disabled = true;
         }
       }
 
-      function escapeHtml(s) {
-        return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      function showManualCorsStep(stepInfo) {
+        pendingManualStep = stepInfo;
+        corsTitle.textContent = stepInfo.title;
+        corsDesc.textContent = stepInfo.desc;
+        corsOpenLink.href = stepInfo.url;
+        corsPaste.value = "";
+        corsBox.style.display = "flex";
       }
 
-      sampleBtn.addEventListener("click", function () {
-        inputEl.value = SAMPLE;
+      corsCopyUrl.addEventListener("click", async () => {
+        if (!pendingManualStep) return;
+        const ok = await copyText(pendingManualStep.url);
+        if (ok) {
+          corsCopyUrl.textContent = "คัดลอกแล้ว!";
+          setTimeout(() => { corsCopyUrl.textContent = "คัดลอกลิงก์"; }, 1500);
+        }
       });
 
-      clearBtn.addEventListener("click", function () {
+      corsContinue.addEventListener("click", () => {
+        if (!pendingManualStep) return;
+        const pasted = corsPaste.value.trim();
+        if (!pasted) return;
+        pendingManualStep.onPaste(pasted);
+      });
+
+      async function runClientSidePipeline(raw) {
+        const stages = [];
+        let scriptName = null;
+        let hash = null;
+
+        // 1. Offline decimal-escaped snippet
+        if (/loadstring\s*\(\s*"(?:\\\d{1,3})+/.test(raw) && !/https?:\/\//i.test(raw)) {
+          const m = raw.match(/loadstring\s*\(\s*"([^"]+)"\s*\)/);
+          const decoded = decodeDecimalEscapes(m ? m[1] : raw);
+          stages.push({ stage: 1, title: "Decode Decimal-Escaped Lua", status: "done", summary: "ถอดรหัสสตริงฐานสิบสำเร็จ", preview: decoded.slice(0, 500) });
+          return renderResult({ success: true, stages, finalCode: decoded });
+        }
+
+        const httpMatches = [...raw.matchAll(/game:HttpGet\s*\(\s*["']([^"']+)["']\s*\)/gi)].map((m) => m[1]);
+        const ioadMatch = raw.match(/Ioad\s*\(\s*["']([^"']+)["']\s*\)/i);
+        hash = ioadMatch ? ioadMatch[1] : (/^[a-f0-9]{32}$/i.test(raw) ? raw : null);
+
+        // 2. Offline LOL! bytecode
+        const directLol = raw.match(/"(LOL![^"]+)"/);
+        if (directLol && !httpMatches.length && !hash) {
+          const bytes = decodeLuaObfuscatorRle(directLol[1]);
+          const strs = extractStringsFromLolChunk(bytes);
+          stages.push({ stage: 1, title: "Decode LuaObfuscator (LOL!)", status: "done", summary: "พบ " + strs.length + " string constants", preview: strs.join("\n") });
+          return renderResult({ success: true, stages, finalCode: strs.map((s) => "-- " + s).join("\n") });
+        }
+
+        // Stage 1: Fetch Auth
+        runBtn.textContent = "Stage 1/5: กำลังดึง Auth...";
+        let authSource = raw;
+        if (httpMatches[0]) {
+          const s1 = await fetchFast(httpMatches[0]);
+          stages.push({ stage: 1, title: "Fetch Initial Auth Loader", status: "done", summary: "ดึงไฟล์จาก " + httpMatches[0], preview: s1.trim().slice(0, 400) });
+          renderResult({ success: true, stages, finalCode: "" });
+          const nested = s1.match(/game:HttpGet\s*\(\s*["']([^"']+)["']\s*\)/i);
+          authSource = nested ? await fetchFast(nested[1]) : s1;
+        } else if (hash) {
+          authSource = await fetchFast("https://script-auth.pages.dev/");
+          stages.push({ stage: 1, title: "Fetch Default Auth VM", status: "done", summary: "ดึงจาก https://script-auth.pages.dev/", preview: "Hash: " + hash });
+          renderResult({ success: true, stages, finalCode: "" });
+        }
+
+        // Stage 2: Decode Auth VM (LOL!)
+        runBtn.textContent = "Stage 2/5: กำลังถอด LOL! VM...";
+        const lolMatch = authSource.match(/"(LOL![^"]+)"/);
+        if (!lolMatch && !hash) {
+          stages.push({ stage: 2, title: "Plain Lua Source", status: "done", summary: "ได้ซอสโค้ด Lua โดยตรง", preview: authSource.slice(0, 400) });
+          return renderResult({ success: true, stages, finalCode: authSource });
+        }
+
+        let workerList = ["https://anti-httpspy.ec-bot352-1.workers.dev/"];
+        if (lolMatch) {
+          const bytes = decodeLuaObfuscatorRle(lolMatch[1]);
+          const consts = extractStringsFromLolChunk(bytes);
+          const foundWorkers = consts.filter((s) => s.startsWith("https://") && s.includes("workers.dev"));
+          if (foundWorkers.length) workerList = foundWorkers;
+          stages.push({ stage: 2, title: "Decode Auth VM (LuaObfuscator LOL!)", status: "done", summary: "พบ Worker " + workerList.length + " ตัว", preview: workerList.join("\n") });
+          renderResult({ success: true, stages, finalCode: "" });
+        }
+
+        if (!hash) throw new Error("ไม่พบ Ioad(\"<hash>\") ในสคริปต์");
+
+        // Stage 3: Decrypt Hash via Firebase (CORS enabled!)
+        runBtn.textContent = "Stage 3/5: กำลังถอด Hash...";
+        const fbRes = await fetchFast("https://hash-code-20ecd-default-rtdb.firebaseio.com/" + encodeURIComponent(hash) + ".json");
+        const hashObj = JSON.parse(fbRes);
+        if (!hashObj || !hashObj.message) throw new Error("ไม่พบ Hash นี้ในฐานข้อมูล");
+        scriptName = hashObj.message;
+        stages.push({ stage: 3, title: "Decrypt Hash (Ioad)", status: "done", summary: 'ถอด Hash สำเร็จ: "' + scriptName + '" (' + (hashObj.type || "MD5") + ')', preview: JSON.stringify(hashObj, null, 2) });
+        renderResult({ success: true, scriptName, hash, stages, finalCode: "" });
+
+        // Stage 4: Fetch Worker (fast fail in <100ms if CORS blocked, never hangs!)
+        runBtn.textContent = "Stage 4/5: กำลังดึง Worker...";
+        const workerUrl = workerList[0].replace(/\/+$/, "") + "/" + encodeURIComponent(scriptName);
+
+        function handleStage4Body(workerBody) {
+          const decMatch = workerBody.match(/loadstring\s*\(\s*"((?:\\\d{1,3})+)"\s*\)/);
+          if (!decMatch) {
+            stages.push({ stage: 4, title: "Decode Worker Payload", status: "done", summary: "ได้โค้ดปลายทางแล้ว", preview: workerBody.slice(0, 400) });
+            corsBox.style.display = "none";
+            return renderResult({ success: true, scriptName, hash, stages, finalCode: workerBody });
+          }
+          const dec4 = decodeDecimalEscapes(decMatch[1]);
+          const urlMatch = dec4.match(/https:\/\/[^"'\s]+&K=/);
+          if (!urlMatch) {
+            stages.push({ stage: 4, title: "Decode Decimal Escape", status: "done", summary: "ถอดสตริงฐานสิบสำเร็จ", preview: dec4 });
+            corsBox.style.display = "none";
+            return renderResult({ success: true, scriptName, hash, stages, finalCode: dec4 });
+          }
+          const key64 = randomKey64();
+          const finalUrl = urlMatch[0] + key64;
+          stages.push({ stage: 4, title: "Bypass Anti-HttpSpy & Decode Decimal Escape", status: "done", summary: "ถอดชั้น Anti-Hook + สร้างคีย์ K 64 ตัว", preview: dec4 });
+          renderResult({ success: true, scriptName, hash, stages, finalCode: "" });
+
+          function handleStage5Body(wrapperBody) {
+            const pMatch = wrapperBody.match(/\)\("([0-9/]+)",\s*[^)]+\)/);
+            const finalLua = pMatch ? decodeByteShift(pMatch[1], key64) : wrapperBody;
+            stages.push({ stage: 5, title: "Decrypt Byte-Shift Cipher -> Final Source", status: "done", summary: "ถอดรหัสสำเร็จ (" + finalLua.split("\n").length + " บรรทัด)", preview: finalLua.slice(0, 500) });
+            corsBox.style.display = "none";
+            renderResult({ success: true, scriptName, hash, stages, finalCode: finalLua });
+          }
+
+          return fetchFast(finalUrl).then(handleStage5Body).catch(() => {
+            showManualCorsStep({
+              title: "ขั้นสุดท้าย (Stage 5): ดึงสคริปต์ที่เข้ารหัสด้วย Key",
+              desc: "เปิดลิงก์ Token นี้ในแท็บใหม่ แล้วก๊อปข้อความทั้งหมดมาวาง:",
+              url: finalUrl,
+              onPaste: handleStage5Body
+            });
+          });
+        }
+
+        try {
+          const workerBody = await fetchFast(workerUrl);
+          await handleStage4Body(workerBody);
+        } catch (err) {
+          showManualCorsStep({
+            title: "Stage 4: ดึงข้อมูลจาก Worker (GitHub Pages ติด CORS ของ workers.dev)",
+            desc: 'สคริปต์นี้ชื่อ "' + scriptName + '" — กดเปิดลิงก์ Worker ในแท็บใหม่แล้วก๊อปข้อความทั้งหมดมาวาง (หรือตั้งค่า Cloudflare Worker Proxy ด้านบนเพื่อให้ดึงอัตโนมัติ):',
+            url: workerUrl,
+            onPaste: handleStage4Body
+          });
+        }
+      }
+
+      sampleBtn.addEventListener("click", () => { inputEl.value = SAMPLE; });
+      clearBtn.addEventListener("click", () => {
         inputEl.value = "";
         stagesList.innerHTML = "";
         metaStrip.style.display = "none";
         errorBox.style.display = "none";
+        corsBox.style.display = "none";
         currentFinalCode = "";
         codeOutput.innerHTML = '<span class="placeholder">วางสคริปต์ทางซ้ายแล้วกด "ถอดรหัสสคริปต์"</span>';
         outputStats.textContent = "ยังไม่มีผลลัพธ์";
@@ -363,54 +679,53 @@
         downloadBtn.disabled = true;
       });
 
-      runBtn.addEventListener("click", async function () {
+      runBtn.addEventListener("click", async () => {
         const raw = inputEl.value.trim();
         if (!raw) return;
-
-        // Offline local shortcut for pure decimal-escaped string without URLs
-        if (/loadstring\s*\(\s*"(?:\\\d{1,3})+/.test(raw) && !/https?:\/\//i.test(raw)) {
-          const m = raw.match(/loadstring\s*\(\s*"([^"]+)"\s*\)/);
-          const decoded = decodeDecimalLocal(m ? m[1] : raw);
-          renderResult({
-            success: true,
-            stages: [{ stage: 1, title: "Local Decimal Escape Decoder", status: "done", summary: "ถอดรหัสแบบออฟไลน์สำเร็จ", preview: decoded.slice(0, 400) }],
-            finalCode: decoded
-          });
-          return;
-        }
-
         runBtn.disabled = true;
         runBtn.textContent = "กำลังประมวลผล...";
         errorBox.style.display = "none";
+        corsBox.style.display = "none";
 
         try {
-          const endpoint = (API_ORIGIN || window.location.origin) + "/api/deobfuscate";
-          const res = await fetch(endpoint, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ input: raw })
-          });
-          const data = await res.json();
-          renderResult(data);
+          const canUseLocalApi =
+            window.location.protocol.startsWith("http") &&
+            (window.location.origin === API_ORIGIN || API_ORIGIN === "");
+
+          if (canUseLocalApi) {
+            const res = await fetch("/api/deobfuscate", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ input: raw })
+            });
+            const data = await res.json();
+            renderResult(data);
+          } else {
+            await runClientSidePipeline(raw);
+          }
         } catch (err) {
-          errorBox.textContent = "เชื่อมต่อตัวประมวลผลไม่สำเร็จ: " + (err && err.message ? err.message : "Network error");
-          errorBox.style.display = "block";
+          try {
+            await runClientSidePipeline(raw);
+          } catch (err2) {
+            errorBox.textContent = "เกิดข้อผิดพลาด: " + (err2 && err2.message ? err2.message : "Unknown error");
+            errorBox.style.display = "block";
+          }
         } finally {
           runBtn.disabled = false;
           runBtn.textContent = "ถอดรหัสสคริปต์";
         }
       });
 
-      copyBtn.addEventListener("click", async function () {
+      copyBtn.addEventListener("click", async () => {
         if (!currentFinalCode) return;
         const ok = await copyText(currentFinalCode);
         if (ok) {
           copyBtn.textContent = "Copied!";
-          setTimeout(function () { copyBtn.textContent = "Copy Source"; }, 1800);
+          setTimeout(() => { copyBtn.textContent = "Copy Source"; }, 1800);
         }
       });
 
-      downloadBtn.addEventListener("click", function () {
+      downloadBtn.addEventListener("click", () => {
         if (!currentFinalCode) return;
         const blob = new Blob([currentFinalCode], { type: "text/plain;charset=utf-8" });
         const url = URL.createObjectURL(blob);
